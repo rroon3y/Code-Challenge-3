@@ -1,0 +1,22 @@
+{
+  "posts": [
+    {
+      "id": "1",
+      "title": "First Blog Post",
+      "content": "This is the content of the first post.",
+      "author": "Alex"
+    },
+    {
+      "id": "2",
+      "title": "Second Blog Post",
+      "content": "More content here!",
+      "author": "Sam"
+    },
+    {
+      "id": "0d47",
+      "title": "sexy love",
+      "content": "yk you my sexy love",
+      "author": "neyo"
+    }
+  ]
+}
