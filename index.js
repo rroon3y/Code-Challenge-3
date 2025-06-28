@@ -1,190 +1,143 @@
 const baseURL = "http://localhost:3000/posts";
+let currentPostId = null;
 
-let currentPostId = null;  // track which post is currently shown/edited
-
-// function will fetch all posts and display titles
+// Fetch and display all posts
 function displayPosts() {
-   fetch(baseURL)
-   .then(response => response.json())
-   .then(posts => {
-    const postList = document.getElementById("post-list");
+  fetch(baseURL)
+    .then((res) => res.json())
+    .then((posts) => {
+      const postsContainer = document.getElementById("posts");
+      const countText = document.getElementById("post-count");
 
-    // clear any existing posts
-    postList.innerHTML = "<h2>All Posts</h2>";
+      postsContainer.innerHTML = ""; // Clear list
+      countText.textContent = `${posts.length} post${posts.length !== 1 ? "s" : ""}`;
 
-    posts.forEach(post => {
-        const postItem = document.createElement("div");
-        postItem.textContent = post.title;
-        postItem.style.cursor = "pointer";
-        postItem.style.padding = "5px";
-        postItem.style.borderBottom = "1px solid #ccc";
+      posts.forEach((post) => {
+        const li = document.createElement("li");
+        li.textContent = post.title;
+        li.style.cursor = "pointer";
+        li.style.padding = "8px 0";
+        li.style.borderBottom = "1px solid #ddd";
 
-        // add click event to show post details 
-        postItem.addEventListener("click", () => handlePostClick(post.id));
+        li.addEventListener("click", () => handlePostClick(post.id));
+        postsContainer.appendChild(li);
+      });
 
-        postList.appendChild(postItem);
-    });
-
-    // show first post by default
-    if (posts.length > 0){
+      // auto-show first post
+      if (posts.length > 0) {
         handlePostClick(posts[0].id);
-    }
-   })
-   .catch(error => console.error("Error fetching posts:", error));
+      }
+    })
+    .catch((err) => console.error("Error loading posts:", err));
 }
 
-// function will display a post's full info
+// Show post details
 function handlePostClick(postId) {
-    currentPostId = postId;  // set current post
+  currentPostId = postId;
 
-    fetch(`${baseURL}/${postId}`)
-    .then(response => response.json())
-    .then(post => {
-        const detail = document.getElementById("post-detail");
-        detail.innerHTML = `
+  fetch(`${baseURL}/${postId}`)
+    .then((res) => res.json())
+    .then((post) => {
+      const detail = document.getElementById("post-detail");
+
+      detail.innerHTML = `
         <h2>${post.title}</h2>
+        <p><strong>By ${post.author}</strong> - ${post.date || "2024-01-01"}</p>
+        <img src="${post.image || 'https://via.placeholder.com/600x300'}" style="max-width:100%; margin:10px 0;">
         <p>${post.content}</p>
-        <p><strong>Author:</strong> ${post.author}</p>
         <button id="edit-btn">Edit</button>
         <button id="delete-btn">Delete</button>
-        `;
+      `;
 
-        // Attach event listeners to Edit and Delete buttons
-        document.getElementById("edit-btn").addEventListener("click", () => showEditForm(post));
-        document.getElementById("delete-btn").addEventListener("click", () => deletePost(post.id));
+      document.getElementById("edit-btn").addEventListener("click", () => showEditForm(post));
+      document.getElementById("delete-btn").addEventListener("click", () => deletePost(post.id));
     })
-    .catch(error => console.error("Error loading post detail:", error));
+    .catch((err) => console.error("Error loading post details:", err));
 }
 
-// function add a new post (now with POST request to backend)
+// Add new post
 function addNewPostListener() {
-    const form = document.getElementById("new-post-form");
+  const form = document.getElementById("new-post-form");
 
-    form.addEventListener("submit", event => {
-        event.preventDefault();
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
 
-        // get form values
-        const title = document.getElementById("new-title").value;
-        const content = document.getElementById("new-content").value;
-        const author = document.getElementById("new-author").value;
+    const title = document.getElementById("new-title").value;
+    const author = document.getElementById("new-author").value;
+    const image = document.getElementById("new-image").value;
+    const content = document.getElementById("new-content").value;
 
-        // create a new post
-        const newPost = {
-            title,
-            content,
-            author
-        };
+    const newPost = { title, author, image, content, date: new Date().toISOString().split("T")[0] };
 
-        // send POST request to save post to backend
-        fetch(baseURL, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(newPost)
-        })
-        .then(response => response.json())
-        .then(savedPost => {
-            // add new post visually to #post-list
-            const postList = document.getElementById("post-list");
-
-            const postItem = document.createElement("div");
-            postItem.textContent = savedPost.title;
-            postItem.style.cursor = "pointer";
-            postItem.style.padding = "5px";
-            postItem.style.borderBottom = "1px solid #ccc";
-
-            // attach click event
-            postItem.addEventListener("click", () => handlePostClick(savedPost.id));
-            postList.appendChild(postItem);
-
-            // clear the form
-            form.reset();
-        })
-        .catch(error => console.error("Error saving post:", error));
-    });
+    fetch(baseURL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(newPost),
+    })
+      .then((res) => res.json())
+      .then((savedPost) => {
+        form.reset();
+        displayPosts(); // refresh post list
+        handlePostClick(savedPost.id); // show the new post
+      })
+      .catch((err) => console.error("Error adding post:", err));
+  });
 }
 
-// show edit form and populate with post data
+// Edit post
 function showEditForm(post) {
-    const editForm = document.getElementById("edit-post-form");
-    editForm.classList.remove("hidden");
+  const form = document.getElementById("edit-post-form");
+  form.classList.remove("hidden");
 
-    document.getElementById("edit-title").value = post.title;
-    document.getElementById("edit-content").value = post.content;
+  document.getElementById("edit-title").value = post.title;
+  document.getElementById("edit-content").value = post.content;
 }
 
-// listen for edit form submission and send PATCH request
+// Handle edit form submission
 function addEditPostListener() {
-    const editForm = document.getElementById("edit-post-form");
-    const cancelBtn = document.getElementById("cancel-edit");
+  const form = document.getElementById("edit-post-form");
+  const cancel = document.getElementById("cancel-edit");
 
-    editForm.addEventListener("submit", event => {
-        event.preventDefault();
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
 
-        const updatedTitle = document.getElementById("edit-title").value;
-        const updatedContent = document.getElementById("edit-content").value;
+    const title = document.getElementById("edit-title").value;
+    const content = document.getElementById("edit-content").value;
 
-        // send PATCH request
-        fetch(`${baseURL}/${currentPostId}`, {
-            method: "PATCH",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                title: updatedTitle,
-                content: updatedContent
-            })
-        })
-        .then(response => response.json())
-        .then(updatedPost => {
-            // hide edit form
-            editForm.classList.add("hidden");
-
-            // update detail view with new info
-            handlePostClick(updatedPost.id);
-
-            // update post title in the list
-            updatePostTitleInList(updatedPost);
-        })
-        .catch(error => console.error("Error updating post:", error));
-    });
-
-    cancelBtn.addEventListener("click", () => {
-        editForm.classList.add("hidden");
-    });
-}
-
-// helper to refresh post list after update or deletion
-function updatePostTitleInList(updatedPost) {
-    // For simplicity, just reload all posts to reflect the change
-    displayPosts();
-}
-
-// delete post by id and update UI
-function deletePost(postId) {
-    fetch(`${baseURL}/${postId}`, {
-        method: "DELETE"
+    fetch(`${baseURL}/${currentPostId}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ title, content }),
     })
-    .then(() => {
-        // reload posts after deletion
+      .then((res) => res.json())
+      .then((updatedPost) => {
+        form.classList.add("hidden");
         displayPosts();
+        handlePostClick(updatedPost.id);
+      })
+      .catch((err) => console.error("Error updating post:", err));
+  });
 
-        // clear post detail view
-        const detail = document.getElementById("post-detail");
-        detail.innerHTML = "<p>Select a post to see details.</p>";
-
-        // hide edit form if open
-        document.getElementById("edit-post-form").classList.add("hidden");
-    })
-    .catch(error => console.error("Error deleting post:", error));
+  cancel.addEventListener("click", () => {
+    form.classList.add("hidden");
+  });
 }
 
-// runs once DOM is fully loaded
+// Delete post
+function deletePost(postId) {
+  fetch(`${baseURL}/${postId}`, { method: "DELETE" })
+    .then(() => {
+      displayPosts();
+      document.getElementById("post-detail").innerHTML = "";
+      document.getElementById("edit-post-form").classList.add("hidden");
+    })
+    .catch((err) => console.error("Error deleting post:", err));
+}
+
 function main() {
-    displayPosts();
-    addNewPostListener();
-    addEditPostListener();
+  displayPosts();
+  addNewPostListener();
+  addEditPostListener();
 }
 
 document.addEventListener("DOMContentLoaded", main);

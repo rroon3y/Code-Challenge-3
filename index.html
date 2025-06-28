@@ -3,41 +3,57 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Simple Blog Manager</title>
+    <title>Post Pulse</title>
     <link rel="stylesheet" href="./style.css" />
   </head>
   <body>
-    <h1>Simple Blog Manager</h1>
+    <h1 style="text-align:center;">Post Pulse</h1>
+    <p style="text-align:center; margin-top: -10px;">Modern blog post management</p>
 
-    <div id="container" style="display: flex; gap: 20px"></div>
+    <div id="container" style="display: flex; gap: 40px; padding: 20px;">
+      <!-- Blog Posts Sidebar -->
+      <div style="width: 35%;">
+        <section id="post-list">
+          <h2>Blog Posts</h2>
+          <p id="post-count">0 posts</p>
+          <ul id="posts"></ul>
+        </section>
 
-    <div id="post-list" style="width: 40%;">   <!--left side : Post list-->
+        <!-- Add New Post Form -->
+        <section style="margin-top: 40px;">
+          <h3>➕ Add New Post</h3>
+          <form id="new-post-form">
+            <input type="text" id="new-title" placeholder="Post title..." required style="width: 100%; margin-bottom: 10px;" />
+            <input type="text" id="new-author" placeholder="Author name..." required style="width: 100%; margin-bottom: 10px;" />
+            <input type="text" id="new-image" placeholder="Image URL..." style="width: 100%; margin-bottom: 10px;" />
+            <textarea id="new-content" placeholder="Write your post content..." rows="4" required style="width: 100%; margin-bottom: 10px;"></textarea>
+            <button type="submit" style="margin-right: 10px;">+ Add Post</button>
+            <button type="button" id="cancel-new">Cancel</button>
+          </form>
+        </section>
+      </div>
 
-        <h2>Post Details</h2>
+      <!-- Post Details Panel -->
+      <div style="flex: 1;">
+        <section id="post-detail">
+          <!-- Populated dynamically -->
+        </section>
+
+        <!-- Edit Post Form -->
+        <form id="edit-post-form" class="hidden" style="margin-top: 20px;">
+          <h4>Update Post Details</h4>
+          <label for="edit-title">Title:</label>
+          <input type="text" name="title" id="edit-title" style="width: 100%; margin-bottom: 10px;" />
+
+          <label for="edit-content">Content:</label>
+          <textarea name="content" id="edit-content" rows="5" style="width: 100%; margin-bottom: 10px;"></textarea>
+
+          <button type="submit" style="margin-right: 10px;">Update Post</button>
+          <button type="button" id="cancel-edit">Cancel</button>
+        </form>
+      </div>
     </div>
-    <div id="post-detail"></div>
 
-    <form id="new-post-form">
-        <h3>Add a New Post</h3>
-        <input type="text" id="new-title" placeholder="Title" required > <br>
-        <textarea id="new-content" placeholder="Content" required ></textarea> <br>
-        <input type="text" id="new-author" placeholder="Author" required> <br>
-        <button type="submit">Add Post</button>
-    </form>
-
-    <form id="edit-post-form" class="hidden">
-  <h4>Update Post Details</h4>
-
-  <label for="edit-title">Title:</label>
-  <input type="text" name="title" id="edit-title" />
-
-  <label for="edit-content">Content:</label>
-  <textarea name="content" id="edit-content" rows="5"></textarea>
-
-  <button type="submit">Update Post</button>
-  <button type="button" id="cancel-edit">Cancel</button>
-</form>
-
-      <script src="./index.js"></script>
+    <script src="./index.js"></script>
   </body>
 </html>

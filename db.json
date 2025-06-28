@@ -2,21 +2,51 @@
   "posts": [
     {
       "id": "1",
-      "title": "First Blog Post",
-      "content": "This is the content of the first post.",
-      "author": "Alex"
+      "title": "Getting Started with React",
+      "content": "React is a powerful JavaScript library for building user interfaces. In this post, we’ll explore the basics and how to get started.",
+      "author": "Sarah Johnson",
+      "date": "2024-01-15",
+      "image": "https://images.unsplash.com/photo-1584697964403-b13c5c99a46a?auto=format&fit=crop&w=600&q=80"
     },
     {
       "id": "2",
-      "title": "Second Blog Post",
-      "content": "More content here!",
-      "author": "Sam"
+      "title": "The Future of Web Development",
+      "content": "Web development is evolving rapidly with trends like AI, WebAssembly, and serverless. Let’s take a look at what’s coming.",
+      "author": "Michael Chen",
+      "date": "2024-01-12",
+      "image": "https://images.unsplash.com/photo-1581091012184-5c44c3f3f7d1?auto=format&fit=crop&w=600&q=80"
     },
     {
-      "id": "0d47",
+      "id": "3",
+      "title": "Design Systems That Scale",
+      "content": "Creating a design system can bring order and consistency to your UI projects. Learn the principles and best practices here.",
+      "author": "Emily Rodriguez",
+      "date": "2024-01-10",
+      "image": "https://images.unsplash.com/photo-1603791440384-56cd371ee9a7"
+    },
+    {
+      "id": "4",
+      "title": "TypeScript Best Practices",
+      "content": "TypeScript enhances JavaScript with type safety and better tooling. Here are the best practices to write clean and maintainable TypeScript.",
+      "author": "David Kim",
+      "date": "2024-01-08",
+      "image": "https://images.unsplash.com/photo-1555066931-4365d14bab8c"
+    },
+    {
+      "id": "a352",
       "title": "sexy love",
-      "content": "yk you my sexy love",
-      "author": "neyo"
+      "author": "neyo",
+      "image": "https://stlsevents.co.uk/wp-content/uploads/2024/01/Best-DJ-setups-for-different-events-1.jpg",
+      "content": "living life",
+      "date": "2025-06-28"
+    },
+    {
+      "id": "e62a",
+      "title": "coding",
+      "author": "MIKE",
+      "image": "https://motionarray.imgix.net/motion-array-1867701-RUGZEVeHQt-high_0010.jpg?w=660&q=60&fit=max&auto=format",
+      "content": "**Coding is the art of turning ideas into reality through logic and creativity.**\n",
+      "date": "2025-06-28"
     }
   ]
 }
