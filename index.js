@@ -112,7 +112,6 @@ function addEditPostListener() {
       .then((res) => res.json())
       .then((updatedPost) => {
         form.classList.add("hidden");
-        displayPosts();
         handlePostClick(updatedPost.id);
       })
       .catch((err) => console.error("Error updating post:", err));
